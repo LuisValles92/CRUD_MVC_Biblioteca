@@ -23,7 +23,8 @@ class CrudLibro
 	{
 		$conexion = Conexion::getInstance();
 		$listaLibros = [];
-		$select = $conexion->query('SELECT * FROM libros');
+		$select = $conexion->prepare('SELECT * FROM libros');
+		$select->execute();
 		foreach ($select->fetchAll() as $libro) {
 			$myLibro = new Libro();
 			$myLibro->setId($libro['id']);
@@ -47,9 +48,8 @@ class CrudLibro
 	public function obtenerLibro($id)
 	{
 		$conexion = Conexion::getInstance();
-		$select = $conexion->prepare('SELECT * FROM libros WHERE ID=:id');
-		$select->bindValue('id', $id);
-		$select->execute();
+		$select = $conexion->prepare('SELECT * FROM libros WHERE ID=?');
+		$select->execute(array($id));
 		$libro = $select->fetch();
 		$myLibro = new Libro();
 		$myLibro->setId($libro['id']);
